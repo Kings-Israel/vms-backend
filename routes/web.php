@@ -55,12 +55,15 @@ Route::middleware('auth')->group(function () {
             // Visits (admin)
             Route::resource('visits', VisitController::class)->except('show', 'edit', 'update');
 
+<<<<<<< HEAD
             // Dashboard analytics drill-down
             Route::prefix('dashboard')->name('dashboard.')->group(function () {
                 Route::get('/visitors/with-vehicle', [DashboardController::class, 'visitorsWithVehicle'])->name('visitors.with-vehicle');
                 Route::get('/visitors/without-vehicle', [DashboardController::class, 'visitorsWithoutVehicle'])->name('visitors.without-vehicle');
             });
 
+=======
+>>>>>>> 4cc2369dd6308ae1ae71aa0d33eaadf0ecc9b0cc
             // Reports
             Route::prefix('reports')->name('reports.')->group(function () {
                 Route::get('/activity-log', [ReportController::class, 'activityLog'])->name('activity-log');
