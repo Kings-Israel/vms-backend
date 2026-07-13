@@ -9,10 +9,7 @@
         "@inertiajs/vue3": "^2.0.0",
         "@tanstack/vue-table": "^8.0.0",
         "@vueuse/core": "^10.0.0",
-<<<<<<< HEAD
         "apexcharts": "^5.16.0",
-=======
->>>>>>> 4cc2369dd6308ae1ae71aa0d33eaadf0ecc9b0cc
         "axios": "^1.7.4",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.0.0",
@@ -22,10 +19,7 @@
         "tailwindcss-animate": "^1.0.7",
         "vue": "^3.4.0",
         "vue-toastification": "^2.0.0-rc.5",
-<<<<<<< HEAD
         "vue3-apexcharts": "^1.11.1",
-=======
->>>>>>> 4cc2369dd6308ae1ae71aa0d33eaadf0ecc9b0cc
         "ziggy-js": "^2.6.3"
     },
     "devDependencies": {
