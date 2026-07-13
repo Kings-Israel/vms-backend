@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
 
             // Visits (admin)
             Route::resource('visits', VisitController::class)->except('show', 'edit', 'update');
+            Route::get('/visits/{visit}/confirmation', [VisitController::class, 'confirmation'])->name('visits.confirmation');
 
             // Dashboard analytics drill-down
             Route::prefix('dashboard')->name('dashboard.')->group(function () {
@@ -74,6 +75,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/', [TenantPortalController::class, 'dashboard'])->name('dashboard');
             Route::post('/visitors', [TenantPortalController::class, 'preRegisterVisitor'])->name('register-visitor');
             Route::get('/history', [TenantPortalController::class, 'visitHistory'])->name('history');
+            Route::get('/visits/{visit}/confirmation', [TenantPortalController::class, 'visitConfirmation'])->name('visits.confirmation');
             Route::delete('/visits/{visit}/cancel', [TenantPortalController::class, 'cancelVisit'])->name('cancel-visit');
         });
 });

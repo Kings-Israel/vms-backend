@@ -112,6 +112,7 @@ class VisitApiController extends Controller
                 'status' => 'checked_in',
                 'checked_in_at' => now(),
                 'checked_in_by' => $officer->id,
+                'qr_token' => null,
             ]);
         } else {
             // Walk-in
@@ -221,6 +222,30 @@ class VisitApiController extends Controller
             'blacklisted' => $visitor->is_blacklisted,
             'visitor' => $visitor,
             'expected_visit' => $expectedVisit,
+        ]);
+    }
+
+    public function lookupByQr(Request $request): JsonResponse
+    {
+        $request->validate(['token' => ['required', 'string']]);
+
+        $visit = Visit::where('qr_token', $request->token)
+            ->where('status', 'expected')
+            ->with(['visitor', 'unit', 'host', 'vehicle', 'visitorType'])
+            ->first();
+
+        if (!$visit) {
+            return response()->json(['found' => false, 'visit' => null]);
+        }
+
+        if ($visit->visitor->is_blacklisted) {
+            return response()->json(['found' => true, 'blacklisted' => true, 'visit' => null]);
+        }
+
+        return response()->json([
+            'found' => true,
+            'blacklisted' => false,
+            'visit' => $visit,
         ]);
     }
 

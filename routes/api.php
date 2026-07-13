@@ -21,6 +21,7 @@ Route::prefix('v1')->group(function () {
         // Lookups
         Route::get('/lookup/national-id', [VisitApiController::class, 'lookupByNationalId']);
         Route::get('/lookup/plate', [VisitApiController::class, 'lookupByPlate']);
+        Route::get('/lookup/qr', [VisitApiController::class, 'lookupByQr']);
 
         // Reference data
         Route::get('/units', [VisitApiController::class, 'getUnits']);

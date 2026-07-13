@@ -19,8 +19,10 @@ class Visit extends Model
         'expected_arrival', 'expected_departure',
         'checked_in_at', 'checked_out_at',
         'checked_in_by', 'checked_out_by',
-        'badge_number', 'is_walk_in', 'escort_required',
+        'badge_number', 'qr_token', 'is_walk_in', 'escort_required',
     ];
+
+    protected $hidden = ['qr_token'];
 
     protected $casts = [
         'expected_arrival' => 'datetime',

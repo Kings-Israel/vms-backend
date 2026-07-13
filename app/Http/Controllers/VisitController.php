@@ -9,6 +9,7 @@ use App\Models\Visitor;
 use App\Models\VisitorType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -93,17 +94,28 @@ class VisitController extends Controller
             'expected_arrival' => $data['expected_arrival'] ?? null,
             'expected_departure' => $data['expected_departure'] ?? null,
             'status' => 'expected',
+            'qr_token' => Str::random(40),
         ]);
 
         // Notify active security officers
         $this->notifySecurityOfficers($visit);
 
-        return redirect()->route('visits.index')->with('success', 'Visit registered successfully.');
+        return redirect()->route('visits.confirmation', $visit)->with('success', 'Visit registered successfully.');
+    }
+
+    public function confirmation(Visit $visit): Response
+    {
+        $visit->load(['visitor', 'unit', 'vehicle']);
+        $visit->makeVisible('qr_token');
+
+        return Inertia::render('Visits/Confirmation', [
+            'visit' => $visit,
+        ]);
     }
 
     public function destroy(Visit $visit): RedirectResponse
     {
-        $visit->update(['status' => 'cancelled']);
+        $visit->update(['status' => 'cancelled', 'qr_token' => null]);
         return redirect()->route('visits.index')->with('success', 'Visit cancelled.');
     }
 

@@ -8,6 +8,7 @@ use App\Models\Visitor;
 use App\Models\VisitorType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -92,6 +93,7 @@ class TenantPortalController extends Controller
             'expected_arrival' => $data['expected_arrival'],
             'expected_departure' => $data['expected_departure'] ?? null,
             'status' => 'expected',
+            'qr_token' => Str::random(40),
         ]);
 
         // Notify security officers
@@ -104,7 +106,24 @@ class TenantPortalController extends Controller
             $officer->notify(new \App\Notifications\NewVisitorExpected($visit));
         }
 
-        return redirect()->route('tenant.dashboard')->with('success', 'Visitor pre-registered successfully. Security has been notified.');
+        return redirect()->route('tenant.visits.confirmation', $visit)->with('success', 'Visitor pre-registered successfully. Security has been notified.');
+    }
+
+    public function visitConfirmation(Visit $visit): Response
+    {
+        $user = auth()->user();
+        $unitIds = $user->units->pluck('id');
+
+        if (!$unitIds->contains($visit->unit_id)) {
+            abort(403);
+        }
+
+        $visit->load(['visitor', 'unit', 'vehicle']);
+        $visit->makeVisible('qr_token');
+
+        return Inertia::render('Tenant/VisitConfirmation', [
+            'visit' => $visit,
+        ]);
     }
 
     public function visitHistory(Request $request): Response
@@ -138,7 +157,7 @@ class TenantPortalController extends Controller
             abort(403);
         }
 
-        $visit->update(['status' => 'cancelled']);
+        $visit->update(['status' => 'cancelled', 'qr_token' => null]);
         return back()->with('success', 'Visit cancelled.');
     }
 }
